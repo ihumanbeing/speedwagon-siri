@@ -1,8 +1,12 @@
 import random as speedwagon
 from playsound import *
 import time
+from tkinter import *
 
 localtime = time.asctime( time.localtime(time.time()) )
+
+root = Tk()
+root.geometry(("350x100"))
 
 
 questions = [
@@ -21,25 +25,45 @@ audio = [
 ]
 
 answers = [
-    "Who am I, you ask? Allow me to introduce myself. I\'m Robert E. O. Speedwagon, the meddler.",
+    "Who am I, you ask?\nAllow me to introduce myself.\nI\'m Robert E. O. Speedwagon, the meddler.",
     "The time is: {}".format(localtime),
     "Uhh... I\'ll leave that to the narrator\n In 1952, he died of a heart attack at age 89. He remained single."
 
 ]
 
-def ask():
-    q = input("Ask me anything! ")
-    q = q.lower()
-    for question in questions:
-        if question == q:
-            num = questions.index(question)
-            print(answers[num])
-            playsound(audio[num])
-            ask()
-    if question != q:
-            print("Huh?.. Sorry?")
-            playsound("huh.mp3")
-            ask()
+answer = StringVar()
 
-ask()
+def ask():
+    global answer, textentry, respond
+    q = answer.get()
+    textentry.delete(0, END)
+    q = q.lower()
+    try:
+        for question in questions:
+            question.lower()
+            if question == q:
+                num = questions.index(question)
+                respond['text'] = answers[num]
+                print(answers[num])
+                playsound(audio[num])
+    except:
+            respond['text'] = "What?.."
+            playsound("huh.mp3")
+            
+respond = Label(root)
+respond.pack()
+
+textentry = Entry(root, textvariable=answer, bd=0, width=47)
+textentry.pack(side=LEFT)
+
+subtn = Button(root, width=3, height=1, text=">", bd=0, command=ask)
+subtn.pack(side=LEFT)
+
+
+
+#ask()
+
+root.mainloop()
+
+
 
